@@ -94,7 +94,7 @@ The output structure is:
 
 ## Usage
 
-Run the tool from the command line:
+### Command Line
 
 ```bash
 # Using an ArXiv ID (Source files are deleted automatically after run)
@@ -104,13 +104,30 @@ python main.py 2502.06448
 python main.py 2502.06448 --keep-sources
 ```
 
+### Web Interface
+
+```bash
+python app.py
+```
+
+Then open [http://localhost:5001](http://localhost:5001) in your browser. The web UI provides:
+- live progress streaming as each citation is processed
+- a visual summary of citing papers with section-level context
+- clickable links to arXiv, DOI, and ADS for every paper
+
 ## Project Structure
 
 ```
 CitationConstellation/
-├── main.py              # Entry point orchestrating the workflow
+├── main.py              # CLI entry point
+├── app.py               # Flask web frontend
 ├── requirements.txt     # Python dependencies
 ├── data/                # Downloaded and extracted source files
+├── templates/
+│   └── index.html       # Web UI template
+├── static/
+│   ├── style.css        # Stylesheet
+│   └── app.js           # Client-side JS
 └── core/
     ├── resolver.py      # input -> PaperID
     ├── fetcher.py       # ADS API interaction

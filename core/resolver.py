@@ -19,12 +19,13 @@ def resolve_paper_id(input_str):
     # defined regex patterns
     arxiv_pattern = r'(\d{4}\.\d{4,5}(v\d+)?)'
     doi_pattern = r'(10\.\d{4,9}/[-._;()/:A-Z0-9]+)'
-    ads_url_pattern = r'ui\.adsabs\.harvard\.edu/abs/([A-Za-z0-9\.]+)'
+    ads_url_pattern = r'ui\.adsabs\.harvard\.edu/abs/([^/\s]+)'
 
     # Check for ADS URL first
     ads_match = re.search(ads_url_pattern, input_str, re.IGNORECASE)
     if ads_match:
-        return PaperID('ads_bibcode', ads_match.group(1))
+        bibcode = urllib.parse.unquote(ads_match.group(1))
+        return PaperID('ads_bibcode', bibcode)
 
     # Check for DOI
     # Handles pure DOI or URL-based DOI (doi.org/...)

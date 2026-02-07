@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citation Constellation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- ───── Starfield canvas (decorative) ───── -->
+<canvas id="starfield"></canvas>
+
+<!-- ───── Main container ───── -->
+<div class="app">
+
+    <!-- ───── Header ───── -->
+    <header class="header">
+        <div class="logo">
+            <svg class="logo-icon" viewBox="0 0 40 40" fill="none">
+                <circle cx="20" cy="20" r="4" fill="#7c8aff"/>
+                <circle cx="8"  cy="12" r="2.2" fill="#a78bfa"/>
+                <circle cx="32" cy="10" r="2.2" fill="#60a5fa"/>
+                <circle cx="10" cy="32" r="2.2" fill="#f472b6"/>
+                <circle cx="34" cy="28" r="2.2" fill="#34d399"/>
+                <line x1="20" y1="20" x2="8"  y2="12" stroke="#7c8aff" stroke-opacity=".35" stroke-width="1"/>
+                <line x1="20" y1="20" x2="32" y2="10" stroke="#7c8aff" stroke-opacity=".35" stroke-width="1"/>
+                <line x1="20" y1="20" x2="10" y2="32" stroke="#7c8aff" stroke-opacity=".35" stroke-width="1"/>
+                <line x1="20" y1="20" x2="34" y2="28" stroke="#7c8aff" stroke-opacity=".35" stroke-width="1"/>
+            </svg>
+            <h1>Citation Constellation</h1>
+        </div>
+        <p class="subtitle">Discover <em>where</em> and <em>how</em> a paper is cited — section by section.</p>
+    </header>
+
+    <!-- ───── Search ───── -->
+    <section class="search-section">
+        <form id="searchForm" autocomplete="off">
+            <div class="input-row">
+                <div class="input-wrapper">
+                    <input type="text" id="paperInput" placeholder="Enter a DOI, arXiv ID, or ADS URL…" required>
+                    <span class="input-hint">e.g. 2502.06448 &nbsp;·&nbsp; 10.1093/mnras/stab1234 &nbsp;·&nbsp; ADS URL</span>
+                </div>
+                <button type="submit" id="searchBtn">
+                    <span class="btn-text">Search</span>
+                    <span class="btn-spinner" hidden></span>
+                </button>
+            </div>
+            <label class="keep-sources-label">
+                <input type="checkbox" id="keepSources"> Keep downloaded sources
+            </label>
+        </form>
+    </section>
+
+    <!-- ───── Progress panel ───── -->
+    <section id="progressSection" class="progress-section" hidden>
+        <div class="progress-header">
+            <h2 id="progressTitle">Searching…</h2>
+            <div class="progress-bar-track">
+                <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+            </div>
+            <span class="progress-pct" id="progressPct"></span>
+        </div>
+        <div class="log-panel" id="logPanel"></div>
+    </section>
+
+    <!-- ───── Results ───── -->
+    <section id="resultsSection" class="results-section" hidden>
+
+        <!-- Root paper card -->
+        <div id="rootCard" class="root-card"></div>
+
+        <!-- Summary strip -->
+        <div id="summaryStrip" class="summary-strip" hidden></div>
+
+        <!-- Citation cards -->
+        <div id="citationCards" class="citation-grid"></div>
+    </section>
+
+    <!-- ───── Error banner ───── -->
+    <div id="errorBanner" class="error-banner" hidden></div>
+
+</div>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

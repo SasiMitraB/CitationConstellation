@@ -4,3 +4,4 @@ pylatexenc
 bibtexparser
 requests
 anytree
+flask

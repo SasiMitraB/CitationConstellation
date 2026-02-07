@@ -1,0 +1,433 @@
+/* ============================================================
+   Citation Constellation — Stylesheet
+   Dark astronomy-themed UI
+   ============================================================ */
+
+/* ── Reset & base ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --bg:        #0b0e17;
+    --surface:   #12162a;
+    --surface-2: #1a1f38;
+    --border:    #262d4a;
+    --text:      #e2e5f0;
+    --text-dim:  #8890ab;
+    --accent:    #7c8aff;
+    --accent-2:  #a78bfa;
+    --accent-3:  #60a5fa;
+    --green:     #34d399;
+    --pink:      #f472b6;
+    --red:       #f87171;
+    --radius:    12px;
+    --radius-sm: 8px;
+    --font:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono:      'JetBrains Mono', ui-monospace, monospace;
+}
+
+html { font-size: 15px; }
+
+body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.55;
+}
+
+#starfield {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ── App container ────────────────────────────────────────── */
+.app {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+.header { text-align: center; margin-bottom: 2.5rem; }
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    margin-bottom: .5rem;
+}
+.logo-icon { width: 36px; height: 36px; }
+.logo h1 {
+    font-size: 1.65rem;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    color: var(--text-dim);
+    font-size: .92rem;
+    font-weight: 400;
+}
+.subtitle em { color: var(--accent-3); font-style: normal; font-weight: 500; }
+
+/* ── Search ───────────────────────────────────────────────── */
+.search-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.6rem 1.8rem;
+    margin-bottom: 2rem;
+}
+
+.input-row {
+    display: flex;
+    gap: .75rem;
+    align-items: flex-start;
+}
+.input-wrapper { flex: 1; }
+
+.input-wrapper input {
+    width: 100%;
+    padding: .7rem 1rem;
+    font-size: .95rem;
+    font-family: var(--mono);
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: border-color .2s;
+}
+.input-wrapper input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(124,138,255,.15);
+}
+.input-wrapper input::placeholder { color: var(--text-dim); }
+
+.input-hint {
+    display: block;
+    margin-top: .4rem;
+    font-size: .75rem;
+    color: var(--text-dim);
+}
+
+/* Button */
+#searchBtn {
+    padding: .7rem 1.6rem;
+    font-size: .92rem;
+    font-weight: 600;
+    font-family: var(--font);
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity .2s, transform .1s;
+    position: relative;
+}
+#searchBtn:hover { opacity: .9; }
+#searchBtn:active { transform: scale(.97); }
+#searchBtn:disabled { opacity: .5; cursor: not-allowed; }
+
+.btn-spinner {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+    vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.keep-sources-label {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    margin-top: .8rem;
+    font-size: .8rem;
+    color: var(--text-dim);
+    cursor: pointer;
+}
+.keep-sources-label input { accent-color: var(--accent); }
+
+/* ── Progress ─────────────────────────────────────────────── */
+.progress-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 2rem;
+}
+
+.progress-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: .8rem;
+    flex-wrap: wrap;
+}
+.progress-header h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.progress-bar-track {
+    flex: 1;
+    min-width: 120px;
+    height: 6px;
+    background: var(--surface-2);
+    border-radius: 3px;
+    overflow: hidden;
+}
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    border-radius: 3px;
+    transition: width .35s ease;
+}
+
+.progress-pct {
+    font-size: .8rem;
+    font-family: var(--mono);
+    color: var(--text-dim);
+    min-width: 3ch;
+    text-align: right;
+}
+
+.log-panel {
+    max-height: 200px;
+    overflow-y: auto;
+    font-family: var(--mono);
+    font-size: .78rem;
+    line-height: 1.6;
+    color: var(--text-dim);
+    padding: .6rem .8rem;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+}
+.log-panel::-webkit-scrollbar { width: 5px; }
+.log-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.log-line { white-space: pre-wrap; word-break: break-word; }
+.log-line.warn { color: #fbbf24; }
+
+/* ── Error ────────────────────────────────────────────────── */
+.error-banner {
+    background: rgba(248,113,113,.1);
+    border: 1px solid rgba(248,113,113,.3);
+    color: var(--red);
+    padding: 1rem 1.4rem;
+    border-radius: var(--radius-sm);
+    margin-top: 1rem;
+    font-size: .9rem;
+}
+
+/* ── Results ──────────────────────────────────────────────── */
+.results-section { margin-top: .5rem; }
+
+/* ── Root card ────────────────────────────────────────────── */
+.root-card {
+    background: linear-gradient(135deg, rgba(124,138,255,.10), rgba(167,139,250,.08));
+    border: 1px solid rgba(124,138,255,.25);
+    border-radius: var(--radius);
+    padding: 1.6rem 1.8rem;
+    margin-bottom: 1.6rem;
+    position: relative;
+    overflow: hidden;
+}
+.root-card::before {
+    content: '';
+    position: absolute;
+    top: -40%; right: -20%;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(124,138,255,.12), transparent 70%);
+    pointer-events: none;
+}
+
+.root-card .tag {
+    display: inline-block;
+    font-size: .68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--accent);
+    background: rgba(124,138,255,.12);
+    padding: .2rem .6rem;
+    border-radius: 4px;
+    margin-bottom: .6rem;
+}
+
+.root-card .paper-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.35;
+    margin-bottom: .35rem;
+}
+
+.root-card .paper-meta {
+    font-size: .82rem;
+    color: var(--text-dim);
+    margin-bottom: .15rem;
+}
+
+.root-card .paper-links a {
+    font-size: .78rem;
+    color: var(--accent-3);
+    text-decoration: none;
+    margin-right: 1rem;
+}
+.root-card .paper-links a:hover { text-decoration: underline; }
+
+/* ── Summary strip ────────────────────────────────────────── */
+.summary-strip {
+    display: flex;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.6rem;
+}
+.summary-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: .8rem 1.2rem;
+    min-width: 140px;
+    text-align: center;
+}
+.summary-stat .num {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+.summary-stat .label {
+    font-size: .75rem;
+    color: var(--text-dim);
+    margin-top: .15rem;
+}
+
+/* ── Citation cards grid ──────────────────────────────────── */
+.citation-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.cite-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.3rem 1.5rem;
+    transition: border-color .2s, box-shadow .2s;
+}
+.cite-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(124,138,255,.08);
+}
+
+.cite-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: .5rem;
+}
+
+.cite-card .paper-title {
+    font-size: .95rem;
+    font-weight: 600;
+    line-height: 1.35;
+    flex: 1;
+}
+
+.cite-card .year-badge {
+    font-size: .75rem;
+    font-weight: 600;
+    color: var(--accent-2);
+    background: rgba(167,139,250,.1);
+    padding: .15rem .55rem;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.cite-card .authors {
+    font-size: .78rem;
+    color: var(--text-dim);
+    margin-bottom: .6rem;
+}
+
+.cite-card .links {
+    margin-bottom: .75rem;
+}
+.cite-card .links a {
+    font-size: .75rem;
+    color: var(--accent-3);
+    text-decoration: none;
+    margin-right: .9rem;
+}
+.cite-card .links a:hover { text-decoration: underline; }
+
+/* Context pills */
+.context-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+}
+
+.ctx-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: .73rem;
+    font-weight: 500;
+    padding: .25rem .65rem;
+    border-radius: 20px;
+    background: rgba(52,211,153,.08);
+    color: var(--green);
+    border: 1px solid rgba(52,211,153,.2);
+}
+.ctx-pill.status-pill {
+    background: rgba(136,144,171,.08);
+    color: var(--text-dim);
+    border-color: var(--border);
+}
+.ctx-pill .dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+}
+
+/* ── Section breakdown bar (mini) ─────────────────────────── */
+.section-bar {
+    display: flex;
+    gap: 2px;
+    height: 4px;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: .5rem;
+}
+.section-bar span {
+    flex: 1;
+    border-radius: 2px;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .app { padding: 1.2rem .8rem 3rem; }
+    .search-section { padding: 1.2rem; }
+    .input-row { flex-direction: column; }
+    #searchBtn { width: 100%; }
+    .root-card { padding: 1.2rem; }
+    .summary-strip { flex-direction: column; }
+}

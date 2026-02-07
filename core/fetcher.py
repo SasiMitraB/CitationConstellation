@@ -99,7 +99,7 @@ def get_paper_metadata(paper_id_obj):
         except StopIteration:
             raise ValueError(f"ArXiv ID {paper_id_obj.value} not found in ArXiv either.")
     
-    raiseValueError(f"Could not resolve metadata for {paper_id_obj}.")
+    raise ValueError(f"Could not resolve metadata for {paper_id_obj}.")
 
     # Old code below is removed/replaced
     # ...
