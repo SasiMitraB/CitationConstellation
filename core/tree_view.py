@@ -1,4 +1,5 @@
 from anytree import Node, RenderTree
+from core.author_utils import find_shared_authors
 
 def print_tree(root_paper, citation_data):
     """
@@ -25,10 +26,25 @@ def print_tree(root_paper, citation_data):
         # 2. Metadata Nodes
         # Authors
         if citing_paper.authors:
-            # Format: Authors: A, B, C...
-            author_text = f"Authors: {', '.join(citing_paper.authors[:3])}"
+            # Find shared authors with root paper
+            shared = find_shared_authors(root_paper.authors, citing_paper.authors)
+
+            # Format author list with highlighting for shared authors
+            displayed_authors = []
+            for author in citing_paper.authors[:3]:
+                if author in shared:
+                    # Yellow color with star for shared authors
+                    displayed_authors.append(f"\033[93m{author} ★\033[0m")
+                else:
+                    displayed_authors.append(author)
+
+            author_text = f"Authors: {', '.join(displayed_authors)}"
             if len(citing_paper.authors) > 3:
                 author_text += "..."
+                # Show count of hidden shared authors if any
+                hidden_shared = [a for a in citing_paper.authors[3:] if a in shared]
+                if hidden_shared:
+                    author_text += f" (+ {len(hidden_shared)} shared)"
             Node(author_text, parent=paper_node)
             
         # Link
@@ -36,6 +52,11 @@ def print_tree(root_paper, citation_data):
             Node(f"Link: https://arxiv.org/abs/{citing_paper.arxiv_id}", parent=paper_node)
         elif citing_paper.doi:
             Node(f"Link: https://doi.org/{citing_paper.doi}", parent=paper_node)
+
+        # Topics (if available from OpenAlex)
+        if hasattr(citing_paper, 'topics') and citing_paper.topics:
+            topic_names = [t['display_name'] for t in citing_paper.topics[:3]]
+            Node(f"Topics: {', '.join(topic_names)}", parent=paper_node)
 
         # 3. Context Nodes (Hierarchical)
         # Check if we have valid CitationContext objects or just strings (errors)

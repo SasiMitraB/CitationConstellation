@@ -40,18 +40,57 @@
         <form id="searchForm" autocomplete="off">
             <div class="input-row">
                 <div class="input-wrapper">
-                    <input type="text" id="paperInput" placeholder="Enter a DOI, arXiv ID, or ADS URL…" required>
-                    <span class="input-hint">e.g. 2502.06448 &nbsp;·&nbsp; 10.1093/mnras/stab1234 &nbsp;·&nbsp; ADS URL</span>
+                    <input type="text" id="paperInput" placeholder="Enter a DOI, arXiv ID, ADS URL, or OpenAlex URL…" required>
+                    <span class="input-hint">e.g. 2502.06448 &nbsp;·&nbsp; 10.1093/mnras/stab1234 &nbsp;·&nbsp; ADS URL &nbsp;·&nbsp; openalex.org/W123</span>
                 </div>
                 <button type="submit" id="searchBtn">
                     <span class="btn-text">Search</span>
                     <span class="btn-spinner" hidden></span>
                 </button>
             </div>
-            <label class="keep-sources-label">
-                <input type="checkbox" id="keepSources"> Keep downloaded sources
-            </label>
+            <div class="options-row">
+                <label class="keep-sources-label">
+                    <input type="checkbox" id="keepSources"> Keep downloaded sources
+                </label>
+                <div class="source-selector">
+                    <label for="sourceSelect">Citation Source:</label>
+                    <select id="sourceSelect">
+                        <option value="ads">NASA ADS</option>
+                        <option value="openalex">OpenAlex</option>
+                    </select>
+                    <span class="source-hint">OpenAlex includes topics/keywords</span>
+                </div>
+            </div>
         </form>
+    </section>
+
+    <!-- ───── Keywords Panel ───── -->
+    <section id="keywordsSection" class="keywords-section" hidden>
+        <div class="keywords-header">
+            <h2>Select Keywords</h2>
+            <p>Found <span id="totalPapersCount">0</span> papers. Select the keywords you want to focus on:</p>
+        </div>
+        <div id="keywordsList" class="keywords-list"></div>
+        <div class="keywords-actions">
+            <button id="selectAllBtn" class="btn-secondary">Select All</button>
+            <button id="selectNoneBtn" class="btn-secondary">Select None</button>
+            <button id="processBtn" class="btn-primary">Process Selected</button>
+        </div>
+    </section>
+
+    <!-- ───── Authors Panel ───── -->
+    <section id="authorsSection" class="authors-section" hidden>
+        <div class="authors-header">
+            <h2>Select Authors</h2>
+            <p>Found <span id="totalFilteredPapersCount">0</span> papers with selected keywords. Select authors:</p>
+        </div>
+        <div id="authorsList" class="authors-list"></div>
+        <div class="authors-actions">
+            <button id="selectAllAuthorsBtn" class="btn-secondary">Select All</button>
+            <button id="selectNoneAuthorsBtn" class="btn-secondary">Select None</button>
+            <button id="backToKeywordsBtn" class="btn-secondary">← Back to Keywords</button>
+            <button id="processByAuthorsBtn" class="btn-primary">Process Selected →</button>
+        </div>
     </section>
 
     <!-- ───── Progress panel ───── -->
@@ -81,6 +120,32 @@
 
     <!-- ───── Error banner ───── -->
     <div id="errorBanner" class="error-banner" hidden></div>
+
+    <!-- ───── Paper Detail Modal ───── -->
+    <dialog id="paperModal" class="paper-modal">
+        <div class="modal-header">
+            <h2 id="modalTitle"></h2>
+            <button class="modal-close" aria-label="Close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-section">
+                <h3>Authors</h3>
+                <p id="modalAuthors"></p>
+            </div>
+            <div class="modal-section">
+                <h3>Abstract</h3>
+                <p id="modalAbstract"></p>
+            </div>
+            <div class="modal-section">
+                <h3>Links</h3>
+                <div id="modalLinks"></div>
+            </div>
+            <div class="modal-section" id="modalTopicsSection" hidden>
+                <h3>Topics</h3>
+                <div id="modalTopics"></div>
+            </div>
+        </div>
+    </dialog>
 
 </div>
 

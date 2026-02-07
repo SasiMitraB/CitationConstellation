@@ -4,30 +4,58 @@ import shutil
 import os
 
 from core.resolver import resolve_paper_id
-from core.fetcher import get_paper_metadata, get_citations
+from core.fetcher import get_paper_metadata_multi_source, get_citations_multi_source
+from core.config import load_config, get_default_source, create_default_config
 from core.downloader import download_source, extract_source, find_main_tex
 from core.parser import get_ast, find_citations, find_key_for_paper, resolve_latex_inclusions
 from core.tree_view import print_tree
 
 def main():
     parser = argparse.ArgumentParser(description="Citation Constellation")
-    parser.add_argument("input", help="DOI, ArXiv ID, or ADS URL of the paper")
+    parser.add_argument("input", nargs='?', help="DOI, arXiv ID, ADS URL, or OpenAlex URL/ID of the paper")
     parser.add_argument("--keep-sources", action="store_true", help="Keep downloaded sources (default: delete)")
+    parser.add_argument("--init-config", action="store_true", help="Create default config file at ~/.citation_config.yaml")
+    parser.add_argument("--source", choices=['ads', 'openalex'], help="Override configured default source")
     args = parser.parse_args()
+
+    # Handle config initialization
+    if args.init_config:
+        try:
+            config_path = create_default_config()
+            print(f"\nConfig file created successfully!")
+            print(f"Edit {config_path} to customize your settings.")
+        except Exception as e:
+            print(f"Error creating config: {e}")
+            sys.exit(1)
+        return
+
+    # Require input if not just initializing config
+    if not args.input:
+        parser.error("the following arguments are required: input")
+
+    # Load config and determine source
+    config = load_config()
+    source = args.source or get_default_source(config)
+    print(f"Using citation source: {source.upper()}")
+    print()
 
     print(f"Resolving input: {args.input}...")
     try:
         paper_id = resolve_paper_id(args.input)
         print(f"Resolved to: {paper_id}")
-        
+
         print("Fetching metadata...")
-        root_metadata = get_paper_metadata(paper_id)
+        root_metadata = get_paper_metadata_multi_source(paper_id, preferred_source=source)
         if not root_metadata.bibcode:
              print("Warning: No bibcode found, citations queries might fail if not using ADS.")
         print(f"Target Paper: {root_metadata.title}")
-        
+        if root_metadata.topics:
+            top_topics = [t['display_name'] for t in root_metadata.topics[:3]]
+            print(f"Topics: {', '.join(top_topics)}")
+        print(f"Data source: {root_metadata.source}")
+
         print("Fetching citing papers (limit 25)...")
-        citing_papers = get_citations(root_metadata.bibcode)
+        citing_papers = get_citations_multi_source(root_metadata, preferred_source=source)
         print(f"Found {len(citing_papers)} citations.")
         
         if len(citing_papers) > 25:

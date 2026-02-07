@@ -5,3 +5,4 @@ bibtexparser
 requests
 anytree
 flask
+PyYAML
