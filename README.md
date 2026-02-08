@@ -4,6 +4,13 @@ Citation Constellation is a Python tool for building a structured map of how a p
 
 ## What It Does
 
+It works by:
+1.  Identifying a target paper.
+2.  Finding papers that cite it.
+3.  Downloading the LaTeX source code of those citing papers (from arXiv, up to 25 citing papers).
+4.  Parsing the source code to find the exact section and subsection where the citation occurs.
+5.  Displaying a hierarchical tree of this information.
+
 Given a DOI, arXiv ID, ADS URL, or OpenAlex URL/ID, the tool:
 
 1. Resolves the identifier into a canonical paper record.
